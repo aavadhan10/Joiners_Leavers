@@ -222,4 +222,17 @@ def main():
         fig, ax = plt.subplots(figsize=(12, 6))
         sns.lineplot(data=time_series_data, ax=ax)
         ax.set_title('Monthly Joiners and Leavers')
-        ax.set_xlabel('Month
+        ax.set_xlabel('Month')
+        ax.set_ylabel('Count')
+        st.pyplot(fig)
+
+    # --- Download data ---
+    st.download_button(
+        label="Download Filtered Data as CSV",
+        data=filtered_df.to_csv(index=False).encode('utf-8'),
+        file_name='filtered_data.csv',
+        mime='text/csv',
+    )
+
+if __name__ == "__main__":
+    main()
