@@ -1,6 +1,5 @@
-streamlit
-pandas
-matplotlib
-seaborn
-streamlit-option-menu
-hashlib
+streamlit==1.31.0
+pandas==2.1.3
+matplotlib==3.8.2
+seaborn==0.13.0
+streamlit-option-menu==0.3.6
