@@ -12,7 +12,13 @@ except ModuleNotFoundError:
     HAS_MATPLOTLIB = False
     st.warning("Matplotlib and/or Seaborn not found. Charts will not be displayed.")
 
-from streamlit_option_menu import option_menu
+# Attempt to import streamlit_option_menu, handle potential ModuleNotFoundError
+try:
+    from streamlit_option_menu import option_menu
+    HAS_OPTION_MENU = True
+except ModuleNotFoundError:
+    HAS_OPTION_MENU = False
+    st.warning("streamlit_option_menu not found. Tabbed navigation will not be displayed.")
 
 # Password Protection
 def make_hashes(password):
@@ -130,14 +136,18 @@ def main():
     filtered_df = filtered_df[filtered_df['Start Year'].isin(selected_years)]
 
     # --- Navigation Menu ---
-    selected_tab = option_menu(
-        menu_title=None,
-        options=["Overview", "Joiners", "Leavers", "Growth", "Financials", "Monthly Trends"],
-        icons=["house", "person-plus", "person-dash", "graph-up", "cash-coin", "calendar"],
-        menu_icon="cast",
-        default_index=0,
-        orientation="horizontal",
-    )
+    if HAS_OPTION_MENU: # Conditionally show the tab menu
+        selected_tab = option_menu(
+            menu_title=None,
+            options=["Overview", "Joiners", "Leavers", "Growth", "Financials", "Monthly Trends"],
+            icons=["house", "person-plus", "person-dash", "graph-up", "cash-coin", "calendar"],
+            menu_icon="cast",
+            default_index=0,
+            orientation="horizontal",
+        )
+    else:
+        st.write("Tabbed navigation is disabled because streamlit_option_menu is not installed.")
+        selected_tab = "Overview" # Default to the overview if the menu is not available
 
     # --- Tab Contents ---
 
