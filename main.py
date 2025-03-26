@@ -26,8 +26,11 @@ if st.session_state.auth_passed:
     csv_url = "https://raw.githubusercontent.com/aavadhan10/Joiners_Leavers/main/2023_Joiners_Leavers.csv"
     response = requests.get(csv_url)
     df = pd.read_csv(io.StringIO(response.text))
+st.write("### CSV Column Preview:")
+st.write(df.columns.tolist())
 
-    df["Date"] = pd.to_datetime(df["Date"], errors="coerce")
+    df.rename(columns={"Join Date": "Date"}, inplace=True)
+df["Date"] = pd.to_datetime(df["Date"], errors="coerce")
     df["Type"] = df["Type"].fillna("Joiner")
 
     all_data = df.copy()
