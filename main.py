@@ -1,6 +1,5 @@
 import streamlit as st
 import pandas as pd
-import hashlib
 import os
 from datetime import datetime
 
@@ -22,24 +21,13 @@ except ModuleNotFoundError as e:
     st.warning(f"streamlit_option_menu not found. Tabbed navigation will not be displayed. Error: {e}")
 
 # Password Protection
-def make_hashes(password):
-    return hashlib.sha256(str.encode(password)).hexdigest()
-
-def check_hashes(password, hashed_text):
-    if make_hashes(password) == hashed_text:
-        return True
-    return False
-
-# DB Management
-hashed_psw = "b0efc7bd43f799c50dae1c9624717f18a54c10b835305c85f8185610b0b06e0d"  # Hashed "joiners2025"
-
 def login():
     """Handle user login and return authentication status"""
-    password = st.sidebar.text_input("Password", type='password', placeholder="Enter password: joiners2025")
-    login_button = st.sidebar.checkbox("Login")
+    password = st.sidebar.text_input("Password", type='password')
+    login_button = st.sidebar.button("Login")
 
     if login_button:
-        if check_hashes(password, hashed_psw):
+        if password == "joiners2025":
             st.success("Successfully logged in")
             st.session_state['logged_in'] = True
             return True
