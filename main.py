@@ -1,9 +1,18 @@
 import streamlit as st
 import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
-from streamlit_option_menu import option_menu
 import hashlib
+import os
+
+# Attempt to import matplotlib and seaborn, handle potential ModuleNotFoundError
+try:
+    import matplotlib.pyplot as plt
+    import seaborn as sns
+    HAS_MATPLOTLIB = True
+except ModuleNotFoundError:
+    HAS_MATPLOTLIB = False
+    st.warning("Matplotlib and/or Seaborn not found. Charts will not be displayed.")
+
+from streamlit_option_menu import option_menu
 
 # Password Protection
 def make_hashes(password):
@@ -184,11 +193,15 @@ def main():
         if not quarterly_growth.empty:
             st.dataframe(quarterly_growth)
 
-            fig, ax = plt.subplots(figsize=(10, 5))
-            sns.lineplot(x='Quarter', y='Net Growth', data=quarterly_growth, ax=ax)
-            ax.set_title('Quarterly Net Growth of Estimated Book')
-            ax.tick_params(axis='x', rotation=45)
-            st.pyplot(fig)
+            if HAS_MATPLOTLIB: # Conditionally show the chart
+                fig, ax = plt.subplots(figsize=(10, 5))
+                sns.lineplot(x='Quarter', y='Net Growth', data=quarterly_growth, ax=ax)
+                ax.set_title('Quarterly Net Growth of Estimated Book')
+                ax.tick_params(axis='x', rotation=45)
+                st.pyplot(fig)
+            else:
+                st.write("Charts are disabled because Matplotlib is not installed.")
+
         else:
             st.write("No data available for the selected filters.")
 
@@ -218,12 +231,15 @@ def main():
         time_series_data = pd.DataFrame({'Joiners': monthly_joiners, 'Leavers': monthly_leavers})
         time_series_data = time_series_data.fillna(0)
 
-        fig, ax = plt.subplots(figsize=(12, 6))
-        sns.lineplot(data=time_series_data, ax=ax)
-        ax.set_title('Monthly Joiners and Leavers')
-        ax.set_xlabel('Month')
-        ax.set_ylabel('Count')
-        st.pyplot(fig)
+        if HAS_MATPLOTLIB: # Conditionally show the chart
+            fig, ax = plt.subplots(figsize=(12, 6))
+            sns.lineplot(data=time_series_data, ax=ax)
+            ax.set_title('Monthly Joiners and Leavers')
+            ax.set_xlabel('Month')
+            ax.set_ylabel('Count')
+            st.pyplot(fig)
+        else:
+            st.write("Charts are disabled because Matplotlib is not installed.")
 
     # --- Download data ---
     st.download_button(
