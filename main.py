@@ -8,17 +8,17 @@ try:
     import matplotlib.pyplot as plt
     import seaborn as sns
     HAS_MATPLOTLIB = True
-except ModuleNotFoundError:
+except ModuleNotFoundError as e:
     HAS_MATPLOTLIB = False
-    st.warning("Matplotlib and/or Seaborn not found. Charts will not be displayed.")
+    st.warning(f"Matplotlib and/or Seaborn not found. Charts will not be displayed.  Error: {e}") # Include the specific error
 
 # Attempt to import streamlit_option_menu, handle potential ModuleNotFoundError
 try:
     from streamlit_option_menu import option_menu
     HAS_OPTION_MENU = True
-except ModuleNotFoundError:
+except ModuleNotFoundError as e:
     HAS_OPTION_MENU = False
-    st.warning("streamlit_option_menu not found. Tabbed navigation will not be displayed.")
+    st.warning(f"streamlit_option_menu not found. Tabbed navigation will not be displayed. Error: {e}")  # Include the specific error
 
 # Password Protection
 def make_hashes(password):
@@ -236,7 +236,7 @@ def main():
         df['Leave Date'] = pd.to_datetime(df['Leave Date'], errors='coerce')
 
         monthly_joiners = filtered_df.dropna(subset=['Start Date']).set_index('Start Date').resample('M').size()
-        monthly_leavers = filtered_df.dropna(subset=['Leave Date']).set_index('Leave Date').resample('M').size()
+        monthly_leavers = filtered_df[filtered_df['Leave Date'].notnull()].set_index('Leave Date').resample('M').size()
 
         time_series_data = pd.DataFrame({'Joiners': monthly_joiners, 'Leavers': monthly_leavers})
         time_series_data = time_series_data.fillna(0)
