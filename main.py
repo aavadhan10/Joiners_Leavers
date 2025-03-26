@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
-import seaborn as sns  # Moved import here
+import matplotlib.pyplot as plt
+import seaborn as sns
 from streamlit_option_menu import option_menu
 import hashlib
 
@@ -183,7 +184,6 @@ def main():
         if not quarterly_growth.empty:
             st.dataframe(quarterly_growth)
 
-            import matplotlib.pyplot as plt  # Import here to avoid global scope issue
             fig, ax = plt.subplots(figsize=(10, 5))
             sns.lineplot(x='Quarter', y='Net Growth', data=quarterly_growth, ax=ax)
             ax.set_title('Quarterly Net Growth of Estimated Book')
@@ -218,7 +218,6 @@ def main():
         time_series_data = pd.DataFrame({'Joiners': monthly_joiners, 'Leavers': monthly_leavers})
         time_series_data = time_series_data.fillna(0)
 
-        import matplotlib.pyplot as plt #import here to avoid global scope issue
         fig, ax = plt.subplots(figsize=(12, 6))
         sns.lineplot(data=time_series_data, ax=ax)
         ax.set_title('Monthly Joiners and Leavers')
